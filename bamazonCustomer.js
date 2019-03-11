@@ -101,8 +101,9 @@ function startUp() {
 
                         startUp();
                     } else if (res[0] > answer.units || res[0] == answer.units) {
-                    
-                        connection.query('UPDATE products SET stock_quantity = ? WHERE item_id = ?', [parseInt(answer.units) - parseInt(res[0]), answer.itemID], function (error, results, fields) {
+                        var new_stock = answer.units-res[0];
+                    //parseInt(answer.units) - parseInt(res[0]) - here's what I had in the qury that was giving me a NaN result in the code.
+                        connection.query('UPDATE products SET stock_quantity = ? WHERE item_id = ?', [new_stock, answer.itemID], function (error, results, fields) {
                             if (error) throw error;
 
                             console.table(results);
@@ -118,4 +119,6 @@ function startUp() {
 
         });
 }
+
+
 
