@@ -51,7 +51,8 @@ function startUp() {
     connection.query(
         "SELECT * FROM products",
         function (err, res) {
-            console.log("Your query hit the DB");
+            //JS is asynchronous, so this will load after inquirer everytime.. how to fix this?
+            console.log("\n============================================");
             console.table(res);
             if (err) throw err;
 
@@ -81,7 +82,7 @@ function startUp() {
         .then(function (answer) {
             //next you should have a function that checks the database and see how 
             //much of the product the store has
-
+            console.log("\n============================================");
             connection.query(
                 "SELECT stock_quantity FROM products WHERE ?",
                 {
@@ -89,34 +90,36 @@ function startUp() {
                 },
                 function (err, res) {
 
-                    console.log("Your query hit the DB");
-                    console.table(res);
+                    console.log("Your query hit the DB and the stock has been updated!");
+
+                    console.log("\n============================================");
+                    // console.log("res is ", res)
+                    // console.table(res[0]);
+                    // console.log(res[0].stock_quantity);
+                    
+                    //How do I specify the type of error thrown? For example if the id does not match a product ID?
                     if (err) throw err;
 
-
-                    if (res[0] < answer.units) {
+                    if (res[0].stock_quantity < answer.units) {
                         console.log(res[0]);
                         console.log("Sorry, not enough units!")
+                        console.log("\n============================================");
                         //exit the function at this point?
 
                         startUp();
-                    } else if (res[0] > answer.units || res[0] == answer.units) {
-                        var new_stock = answer.units-res[0];
+                    } else if (res[0].stock_quantity > answer.units || res[0].stock_quantity == answer.units) {
+                        // console.log(res[0]-answer.units);
+                        var new_stock = res[0].stock_quantity-answer.units;
                     //parseInt(answer.units) - parseInt(res[0]) - here's what I had in the qury that was giving me a NaN result in the code.
                         connection.query('UPDATE products SET stock_quantity = ? WHERE item_id = ?', [new_stock, answer.itemID], function (error, results, fields) {
                             if (error) throw error;
 
-                            console.table(results);
+                            // console.table(results);
                             // re-prompt the user for if they want to bid or post
                             startUp();
                         });
-
                     };
-
                 });
-
-
-
         });
 }
 
