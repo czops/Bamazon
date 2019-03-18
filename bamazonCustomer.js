@@ -96,7 +96,7 @@ function startUp() {
                     // console.log("res is ", res)
                     // console.table(res[0]);
                     // console.log(res[0].stock_quantity);
-                    
+
                     //How do I specify the type of error thrown? For example if the id does not match a product ID?
                     if (err) throw err;
 
@@ -109,8 +109,8 @@ function startUp() {
                         startUp();
                     } else if (res[0].stock_quantity > answer.units || res[0].stock_quantity == answer.units) {
                         // console.log(res[0]-answer.units);
-                        var new_stock = res[0].stock_quantity-answer.units;
-                    //parseInt(answer.units) - parseInt(res[0]) - here's what I had in the qury that was giving me a NaN result in the code.
+                        var new_stock = res[0].stock_quantity - answer.units;
+                        //parseInt(answer.units) - parseInt(res[0]) - here's what I had in the qury that was giving me a NaN result in the code.
                         connection.query('UPDATE products SET stock_quantity = ? WHERE item_id = ?', [new_stock, answer.itemID], function (error, results, fields) {
                             if (error) throw error;
 
